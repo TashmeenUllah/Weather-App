@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:my_weather/models/weather_model.dart'; 
+import 'package:lottie/lottie.dart';
+import 'package:intl/intl.dart';
+
+
+class WeatherCard extends StatelessWidget {
+  final weather ;
+  const WeatherCard({super.key,required this.weather});
+
+  String formatTime(int timestemp){
+   final date = DateTime.fromMillisecondsSinceEpoch(timestemp * 1000);
+
+    return DateFormat('hh:mm a').format(date);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return  Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(115, 255, 255, 255),
+             borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+               Lottie.asset(
+                weather.description.contains('rain')
+                ? 'assets/rain.json'
+                : weather.description.contains('clear')
+                ? 'assets/sunny.json'
+                : 'assets/cloudy.json',
+
+                height: 150,
+                width: 150,
+               ),
+
+               Text(
+                weather.cityName,
+                style: Theme.of(context).textTheme.headlineSmall,
+               ),
+
+               SizedBox(height: 10,),
+               Text(
+                '${weather.temperature.toStringAsFixed(1)}°C',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
+               ),
+
+                SizedBox(height: 10,),
+
+                Text(
+                  weather.description,
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+
+                  SizedBox(height: 20,),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                     Text('Humidity:${weather.humidity}%',
+                     style: Theme.of(context).textTheme.bodyMedium,
+                     ),
+
+                       Text('Wind:${weather.windSpeed} m/s',
+                     style: Theme.of(context).textTheme.bodyMedium,
+                     ),
+                    ],
+                  ),
+
+                    SizedBox(height: 20,),
+
+
+                     Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                        Icon(Icons.wb_sunny_outlined,color: Colors.orange,),
+                     Text('SunRise',
+                     style: Theme.of(context).textTheme.bodyMedium,
+                     ),
+                     Text(
+                      formatTime(weather.sunRise),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                     )
+                        ],
+                      ),
+                    
+
+                     Column(
+                        children: [
+                        Icon(Icons.nights_stay_outlined,color: Colors.purple,),
+                     Text('SunSet',
+                     style: Theme.of(context).textTheme.bodyMedium,
+                     ),
+                     Text(
+                      formatTime(weather.sunSet),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                     )
+                        ],
+                      ),
+                    
+
+                    //    Text('Wind:${weather.windSpeed} m/s',
+                    //  style: Theme.of(context).textTheme.bodyMedium,
+                    //  ),
+                    ],
+                  ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
